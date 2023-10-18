@@ -17,7 +17,7 @@ import br.com.api.service.ClienteService;
 
 @Service
 @Slf4j
-@Transactional
+
 public class ClienteServiceImpl implements ClienteService {
 
 	// Singleton: Injetar os componentes do Spring com @Autowired.
@@ -48,11 +48,26 @@ public class ClienteServiceImpl implements ClienteService {
 	@Override
 	public Cliente inserir(Cliente cliente) {
 		log.info("Cadastrando cliente.");
+		// Verifica se o email já está em uso.
 		boolean emailEmUso = clienteRepository.findByEmail(cliente.getEmail())
 				.stream()
-				.anyMatch(clienteExixtente -> !clienteExixtente.equals(cliente));
+				.anyMatch(clienteExistente -> !clienteExistente.equals(cliente));
 		if(emailEmUso){
 			throw new NegocioException("Email já consta na base de dados. Cadastre outro email.");
+		}
+		// Verifica se o cpf já está em uso.
+		boolean cpfEmUso = clienteRepository.findByCpf(cliente.getCpf())
+				.stream()
+				.anyMatch(clienteExistente -> !clienteExistente.equals(cliente));
+		if(cpfEmUso){
+			throw new NegocioException("Cpf já consta na base de dados.");
+		}
+		// Verifica se o telefone já está em uso.
+		boolean telefoneEmUso = clienteRepository.findByTelefone(cliente.getTelefone())
+				.stream()
+				.anyMatch(clienteExistente -> !clienteExistente.equals(cliente));
+		if(telefoneEmUso){
+			throw new NegocioException("Telefone já consta na base de dados. Cadastre outro email.");
 		}
 		salvarClienteComCep(cliente);
 		return clienteRepository.save(cliente);
@@ -68,6 +83,7 @@ public class ClienteServiceImpl implements ClienteService {
 	}
 
 	@Override
+	@Transactional
 	public void deletar(Long id) {
 		log.info("Deletando cliente com id: " + id);
 		clienteRepository.deleteById(id);

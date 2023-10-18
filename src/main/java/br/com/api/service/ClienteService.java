@@ -3,11 +3,7 @@ package br.com.api.service;
 import br.com.api.model.Cliente;
 
 /**
- * Interface que define o padrão <b>Strategy</b> no domínio de cliente. Com
- * isso, se necessário, podemos ter multiplas implementações dessa mesma
- * interface.
- * 
- * @author falvojr
+ * Interface que define o padrão <b>Strategy</b> no domínio de cliente.
  */
 public interface ClienteService {
 
