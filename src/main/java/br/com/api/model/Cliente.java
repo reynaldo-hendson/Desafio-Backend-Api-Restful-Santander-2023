@@ -27,6 +27,7 @@ public class Cliente {
 
 
 	//todo: implement dto
+	//todo: implement deploy
 
 	public Long getId() {
 		return id;
