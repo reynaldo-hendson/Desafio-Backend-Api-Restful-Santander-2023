@@ -13,7 +13,7 @@ public interface ClienteService {
 
 	Cliente inserir(Cliente cliente);
 
-	void atualizar(Long id, Cliente cliente);
+	Cliente atualizar(Long id, Cliente cliente);
 
 	void deletar(Long id);
 

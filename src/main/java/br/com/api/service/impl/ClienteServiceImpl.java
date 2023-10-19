@@ -2,6 +2,7 @@ package br.com.api.service.impl;
 
 import java.util.Optional;
 
+import br.com.api.exception.EntidadeNaoEncontradaException;
 import br.com.api.exception.NegocioException;
 import br.com.api.service.ViaCepService;
 import jakarta.transaction.Transactional;
@@ -74,18 +75,25 @@ public class ClienteServiceImpl implements ClienteService {
 	}
 
 	@Override
-	public void atualizar(Long id, Cliente cliente) {
+	public Cliente atualizar(Long id, Cliente cliente) {
 		log.info("Buscando Cliente com id: " + id);
 		Optional<Cliente> clienteExistente = clienteRepository.findById(id);
-		if (clienteExistente.isPresent()) {
+		if (clienteExistente.isEmpty()) {
+			throw new NegocioException("Cliente não encontrado.");
+
+		}else{
 			salvarClienteComCep(cliente);
 		}
+		cliente.setId(id);
+		return clienteRepository.save(cliente);
+
 	}
 
 	@Override
 	@Transactional
 	public void deletar(Long id) {
 		log.info("Deletando cliente com id: " + id);
+		this.buscarPorId(id);
 		clienteRepository.deleteById(id);
 	}
 
